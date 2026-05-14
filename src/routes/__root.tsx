@@ -90,6 +90,12 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Savora — Spend Better, Save Smarter" },
+      { name: "description", content: "Aplikasi pengelola keuangan harian dengan tampilan aesthetic nude yang membantu kamu mencatat pemasukan, pengeluaran, target tabungan, dan mengatur budget denga" },
+      { property: "og:description", content: "Aplikasi pengelola keuangan harian dengan tampilan aesthetic nude yang membantu kamu mencatat pemasukan, pengeluaran, target tabungan, dan mengatur budget denga" },
+      { name: "twitter:description", content: "Aplikasi pengelola keuangan harian dengan tampilan aesthetic nude yang membantu kamu mencatat pemasukan, pengeluaran, target tabungan, dan mengatur budget denga" },
+      { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/SkCqXfaDHhcW73ukhIPlfQeGvou1/social-images/social-1778740568568-3d_rendering_qr_code_scanning_via_mobile_phone_with_bill_coin_floating_on_purple_background_pay_money_or_online_payment_shopping_special_concept_digital_transfer_financial_wallet_transaction___Premium_Photo.webp" },
+      { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/SkCqXfaDHhcW73ukhIPlfQeGvou1/social-images/social-1778740568568-3d_rendering_qr_code_scanning_via_mobile_phone_with_bill_coin_floating_on_purple_background_pay_money_or_online_payment_shopping_special_concept_digital_transfer_financial_wallet_transaction___Premium_Photo.webp" },
     ],
     links: [
       {
