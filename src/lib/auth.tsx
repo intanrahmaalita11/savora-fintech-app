@@ -33,6 +33,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   useEffect(() => {
+    try {
+      const t = localStorage.getItem("savora-theme");
+      if (t === "dark") document.documentElement.classList.add("dark");
+    } catch {}
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
       setSession(s);
       setUser(s?.user ?? null);
