@@ -17,6 +17,7 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppTransactionsRouteImport } from './routes/_app/transactions'
 import { Route as AppSavingsRouteImport } from './routes/_app/savings'
+import { Route as AppNotificationsRouteImport } from './routes/_app/notifications'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppAddRouteImport } from './routes/_app/add'
 
@@ -59,6 +60,11 @@ const AppSavingsRoute = AppSavingsRouteImport.update({
   path: '/savings',
   getParentRoute: () => AppRoute,
 } as any)
+const AppNotificationsRoute = AppNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -78,6 +84,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/add': typeof AppAddRoute
   '/dashboard': typeof AppDashboardRoute
+  '/notifications': typeof AppNotificationsRoute
   '/savings': typeof AppSavingsRoute
   '/transactions': typeof AppTransactionsRoute
 }
@@ -89,6 +96,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/add': typeof AppAddRoute
   '/dashboard': typeof AppDashboardRoute
+  '/notifications': typeof AppNotificationsRoute
   '/savings': typeof AppSavingsRoute
   '/transactions': typeof AppTransactionsRoute
 }
@@ -102,6 +110,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_app/add': typeof AppAddRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/notifications': typeof AppNotificationsRoute
   '/_app/savings': typeof AppSavingsRoute
   '/_app/transactions': typeof AppTransactionsRoute
 }
@@ -115,6 +124,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/add'
     | '/dashboard'
+    | '/notifications'
     | '/savings'
     | '/transactions'
   fileRoutesByTo: FileRoutesByTo
@@ -126,6 +136,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/add'
     | '/dashboard'
+    | '/notifications'
     | '/savings'
     | '/transactions'
   id:
@@ -138,6 +149,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_app/add'
     | '/_app/dashboard'
+    | '/_app/notifications'
     | '/_app/savings'
     | '/_app/transactions'
   fileRoutesById: FileRoutesById
@@ -209,6 +221,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSavingsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/notifications': {
+      id: '/_app/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof AppNotificationsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
@@ -229,6 +248,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppAddRoute: typeof AppAddRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppNotificationsRoute: typeof AppNotificationsRoute
   AppSavingsRoute: typeof AppSavingsRoute
   AppTransactionsRoute: typeof AppTransactionsRoute
 }
@@ -236,6 +256,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppAddRoute: AppAddRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppNotificationsRoute: AppNotificationsRoute,
   AppSavingsRoute: AppSavingsRoute,
   AppTransactionsRoute: AppTransactionsRoute,
 }
