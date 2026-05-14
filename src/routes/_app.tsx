@@ -1,4 +1,4 @@
-import { createFileRoute, Outlet, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { useAuth } from "@/lib/auth";
 import { AppShell } from "@/components/AppShell";
@@ -23,8 +23,3 @@ function AppLayout() {
   }
   return <AppShell />;
 }
-
-export { AppLayout };
-
-// re-export Outlet for completeness; AppShell renders it internally
-export const _Outlet = Outlet;
