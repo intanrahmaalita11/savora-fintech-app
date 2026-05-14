@@ -38,7 +38,7 @@ function AddPage() {
       .maybeSingle()
       .then(({ data }) => {
         if (data) {
-          setType(data.type);
+          setType(data.type as "income" | "expense");
           setAmount(String(data.amount));
           setCategory(data.category);
           setDate(data.occurred_at);
