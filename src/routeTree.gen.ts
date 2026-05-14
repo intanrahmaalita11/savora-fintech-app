@@ -16,7 +16,9 @@ import { Route as ForgotPasswordRouteImport } from './routes/forgot-password'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppTransactionsRouteImport } from './routes/_app/transactions'
+import { Route as AppSettingsRouteImport } from './routes/_app/settings'
 import { Route as AppSavingsRouteImport } from './routes/_app/savings'
+import { Route as AppProfileRouteImport } from './routes/_app/profile'
 import { Route as AppNotificationsRouteImport } from './routes/_app/notifications'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppAddRouteImport } from './routes/_app/add'
@@ -55,9 +57,19 @@ const AppTransactionsRoute = AppTransactionsRouteImport.update({
   path: '/transactions',
   getParentRoute: () => AppRoute,
 } as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppSavingsRoute = AppSavingsRouteImport.update({
   id: '/savings',
   path: '/savings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppProfileRoute = AppProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
   getParentRoute: () => AppRoute,
 } as any)
 const AppNotificationsRoute = AppNotificationsRouteImport.update({
@@ -85,7 +97,9 @@ export interface FileRoutesByFullPath {
   '/add': typeof AppAddRoute
   '/dashboard': typeof AppDashboardRoute
   '/notifications': typeof AppNotificationsRoute
+  '/profile': typeof AppProfileRoute
   '/savings': typeof AppSavingsRoute
+  '/settings': typeof AppSettingsRoute
   '/transactions': typeof AppTransactionsRoute
 }
 export interface FileRoutesByTo {
@@ -97,7 +111,9 @@ export interface FileRoutesByTo {
   '/add': typeof AppAddRoute
   '/dashboard': typeof AppDashboardRoute
   '/notifications': typeof AppNotificationsRoute
+  '/profile': typeof AppProfileRoute
   '/savings': typeof AppSavingsRoute
+  '/settings': typeof AppSettingsRoute
   '/transactions': typeof AppTransactionsRoute
 }
 export interface FileRoutesById {
@@ -111,7 +127,9 @@ export interface FileRoutesById {
   '/_app/add': typeof AppAddRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/notifications': typeof AppNotificationsRoute
+  '/_app/profile': typeof AppProfileRoute
   '/_app/savings': typeof AppSavingsRoute
+  '/_app/settings': typeof AppSettingsRoute
   '/_app/transactions': typeof AppTransactionsRoute
 }
 export interface FileRouteTypes {
@@ -125,7 +143,9 @@ export interface FileRouteTypes {
     | '/add'
     | '/dashboard'
     | '/notifications'
+    | '/profile'
     | '/savings'
+    | '/settings'
     | '/transactions'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -137,7 +157,9 @@ export interface FileRouteTypes {
     | '/add'
     | '/dashboard'
     | '/notifications'
+    | '/profile'
     | '/savings'
+    | '/settings'
     | '/transactions'
   id:
     | '__root__'
@@ -150,7 +172,9 @@ export interface FileRouteTypes {
     | '/_app/add'
     | '/_app/dashboard'
     | '/_app/notifications'
+    | '/_app/profile'
     | '/_app/savings'
+    | '/_app/settings'
     | '/_app/transactions'
   fileRoutesById: FileRoutesById
 }
@@ -214,11 +238,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppTransactionsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/settings': {
+      id: '/_app/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/savings': {
       id: '/_app/savings'
       path: '/savings'
       fullPath: '/savings'
       preLoaderRoute: typeof AppSavingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/profile': {
+      id: '/_app/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof AppProfileRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/notifications': {
@@ -249,7 +287,9 @@ interface AppRouteChildren {
   AppAddRoute: typeof AppAddRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
+  AppProfileRoute: typeof AppProfileRoute
   AppSavingsRoute: typeof AppSavingsRoute
+  AppSettingsRoute: typeof AppSettingsRoute
   AppTransactionsRoute: typeof AppTransactionsRoute
 }
 
@@ -257,7 +297,9 @@ const AppRouteChildren: AppRouteChildren = {
   AppAddRoute: AppAddRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppNotificationsRoute: AppNotificationsRoute,
+  AppProfileRoute: AppProfileRoute,
   AppSavingsRoute: AppSavingsRoute,
+  AppSettingsRoute: AppSettingsRoute,
   AppTransactionsRoute: AppTransactionsRoute,
 }
 
