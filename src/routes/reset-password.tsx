@@ -3,13 +3,14 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Logo } from "@/components/Logo";
-import { Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/reset-password")({ component: ResetPage });
 
 function ResetPage() {
   const nav = useNavigate();
   const [password, setPassword] = useState("");
+  const [show, setShow] = useState(false);
   const [busy, setBusy] = useState(false);
 
   const submit = async (e: React.FormEvent) => {
@@ -31,13 +32,23 @@ function ResetPage() {
         <p className="mt-2 text-sm text-muted-foreground">Pilih password yang aman & mudah diingat.</p>
       </div>
       <form onSubmit={submit} className="mt-8 space-y-4">
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          placeholder="Password baru"
-          className="w-full rounded-2xl border border-input bg-card px-4 py-4 outline-none focus:border-ring"
-        />
+        <div className="relative">
+          <input
+            type={show ? "text" : "password"}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            placeholder="Password baru"
+            className="w-full rounded-2xl border border-input bg-card px-4 py-4 pr-12 outline-none focus:border-ring"
+          />
+          <button
+            type="button"
+            onClick={() => setShow((s) => !s)}
+            className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground"
+            aria-label="toggle password"
+          >
+            {show ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+          </button>
+        </div>
         <button
           disabled={busy}
           className="btn-press flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-6 py-4 font-semibold text-primary-foreground shadow-lg disabled:opacity-60"
