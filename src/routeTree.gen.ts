@@ -20,6 +20,7 @@ import { Route as AppSettingsRouteImport } from './routes/_app/settings'
 import { Route as AppSavingsRouteImport } from './routes/_app/savings'
 import { Route as AppProfileRouteImport } from './routes/_app/profile'
 import { Route as AppNotificationsRouteImport } from './routes/_app/notifications'
+import { Route as AppFriendsRouteImport } from './routes/_app/friends'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppAddRouteImport } from './routes/_app/add'
 
@@ -77,6 +78,11 @@ const AppNotificationsRoute = AppNotificationsRouteImport.update({
   path: '/notifications',
   getParentRoute: () => AppRoute,
 } as any)
+const AppFriendsRoute = AppFriendsRouteImport.update({
+  id: '/friends',
+  path: '/friends',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppDashboardRoute = AppDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -96,6 +102,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/add': typeof AppAddRoute
   '/dashboard': typeof AppDashboardRoute
+  '/friends': typeof AppFriendsRoute
   '/notifications': typeof AppNotificationsRoute
   '/profile': typeof AppProfileRoute
   '/savings': typeof AppSavingsRoute
@@ -110,6 +117,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/add': typeof AppAddRoute
   '/dashboard': typeof AppDashboardRoute
+  '/friends': typeof AppFriendsRoute
   '/notifications': typeof AppNotificationsRoute
   '/profile': typeof AppProfileRoute
   '/savings': typeof AppSavingsRoute
@@ -126,6 +134,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/_app/add': typeof AppAddRoute
   '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/friends': typeof AppFriendsRoute
   '/_app/notifications': typeof AppNotificationsRoute
   '/_app/profile': typeof AppProfileRoute
   '/_app/savings': typeof AppSavingsRoute
@@ -142,6 +151,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/add'
     | '/dashboard'
+    | '/friends'
     | '/notifications'
     | '/profile'
     | '/savings'
@@ -156,6 +166,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/add'
     | '/dashboard'
+    | '/friends'
     | '/notifications'
     | '/profile'
     | '/savings'
@@ -171,6 +182,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/_app/add'
     | '/_app/dashboard'
+    | '/_app/friends'
     | '/_app/notifications'
     | '/_app/profile'
     | '/_app/savings'
@@ -266,6 +278,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppNotificationsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/friends': {
+      id: '/_app/friends'
+      path: '/friends'
+      fullPath: '/friends'
+      preLoaderRoute: typeof AppFriendsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/dashboard': {
       id: '/_app/dashboard'
       path: '/dashboard'
@@ -286,6 +305,7 @@ declare module '@tanstack/react-router' {
 interface AppRouteChildren {
   AppAddRoute: typeof AppAddRoute
   AppDashboardRoute: typeof AppDashboardRoute
+  AppFriendsRoute: typeof AppFriendsRoute
   AppNotificationsRoute: typeof AppNotificationsRoute
   AppProfileRoute: typeof AppProfileRoute
   AppSavingsRoute: typeof AppSavingsRoute
@@ -296,6 +316,7 @@ interface AppRouteChildren {
 const AppRouteChildren: AppRouteChildren = {
   AppAddRoute: AppAddRoute,
   AppDashboardRoute: AppDashboardRoute,
+  AppFriendsRoute: AppFriendsRoute,
   AppNotificationsRoute: AppNotificationsRoute,
   AppProfileRoute: AppProfileRoute,
   AppSavingsRoute: AppSavingsRoute,
@@ -316,3 +337,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
