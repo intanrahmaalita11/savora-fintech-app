@@ -411,3 +411,87 @@ function ContribSheet({ goal, mode, onClose }: { goal: Goal; mode: "add" | "sub"
     </Sheet>
   );
 }
+
+function NewGroupSheet({ onClose }: { onClose: () => void }) {
+  const { user } = useAuth();
+  const [name, setName] = useState("");
+  const [target, setTarget] = useState("");
+  const [deadline, setDeadline] = useState("");
+  const [emoji, setEmoji] = useState("🏝️");
+  const [busy, setBusy] = useState(false);
+
+  const submit = async () => {
+    if (!user) return;
+    if (!name.trim()) return toast.error("Nama tabungan wajib diisi");
+    const num = Number(target.replace(/[^\d]/g, ""));
+    if (!num || num <= 0) return toast.error("Nominal target tidak valid");
+    setBusy(true);
+    const { data, error } = await supabase
+      .from("group_savings")
+      .insert({
+        owner_id: user.id,
+        name: name.trim(),
+        target_amount: num,
+        deadline: deadline || null,
+        emoji,
+      })
+      .select("id")
+      .single();
+    setBusy(false);
+    if (error) return toast.error(error.message);
+    toast.success("Tabungan bareng dibuat 🎉 Sekarang ajak temanmu!");
+    onClose();
+    if (data?.id) window.location.assign(`/groups/${data.id}`);
+  };
+
+  return (
+    <Sheet onClose={onClose}>
+      <div className="mb-4 flex items-center justify-between">
+        <h3 className="font-display text-lg font-bold">Tabungan bareng baru</h3>
+        <button onClick={onClose} className="rounded-full p-2 hover:bg-accent"><X className="h-5 w-5" /></button>
+      </div>
+      <div className="space-y-3">
+        <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
+          {EMOJIS.map((e) => (
+            <button
+              key={e}
+              onClick={() => setEmoji(e)}
+              className={`btn-press grid h-12 w-12 flex-shrink-0 place-items-center rounded-2xl text-2xl ${
+                emoji === e ? "bg-primary/15 ring-2 ring-primary" : "bg-accent"
+              }`}
+            >
+              {e}
+            </button>
+          ))}
+        </div>
+        <input
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          placeholder="Misalnya: Liburan ke Bali bareng"
+          className="w-full rounded-2xl border border-input bg-card px-4 py-3 text-sm outline-none focus:border-ring"
+        />
+        <input
+          inputMode="numeric"
+          value={target}
+          onChange={(e) => setTarget(e.target.value.replace(/[^\d]/g, ""))}
+          placeholder="Target nominal (Rp)"
+          className="w-full rounded-2xl border border-input bg-card px-4 py-3 text-sm outline-none focus:border-ring"
+        />
+        <input
+          type="date"
+          value={deadline}
+          onChange={(e) => setDeadline(e.target.value)}
+          className="w-full rounded-2xl border border-input bg-card px-4 py-3 text-sm outline-none focus:border-ring"
+        />
+        <p className="text-[11px] text-muted-foreground">🔒 Teman yang kamu ajak hanya bisa lihat dan setor ke tabungan ini — bukan keuangan pribadimu.</p>
+      </div>
+      <button
+        onClick={submit}
+        disabled={busy}
+        className="btn-press mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-brand py-4 font-semibold text-primary-foreground disabled:opacity-60"
+      >
+        {busy && <Loader2 className="h-4 w-4 animate-spin" />} Buat tabungan bareng
+      </button>
+    </Sheet>
+  );
+}
