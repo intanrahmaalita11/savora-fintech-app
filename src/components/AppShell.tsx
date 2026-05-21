@@ -3,19 +3,21 @@ import { Home, ListChecks, PiggyBank, Bell, User, Plus } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
+import { useT } from "@/lib/i18n";
 
-const tabs = [
-  { to: "/dashboard", icon: Home, label: "Beranda" },
-  { to: "/transactions", icon: ListChecks, label: "Transaksi" },
-  { to: "/savings", icon: PiggyBank, label: "Tabungan" },
-  { to: "/notifications", icon: Bell, label: "Notif" },
-  { to: "/profile", icon: User, label: "Profil" },
+const tabsBase = [
+  { to: "/dashboard", icon: Home, key: "nav.home" },
+  { to: "/transactions", icon: ListChecks, key: "nav.tx" },
+  { to: "/savings", icon: PiggyBank, key: "nav.savings" },
+  { to: "/notifications", icon: Bell, key: "nav.notif" },
+  { to: "/profile", icon: User, key: "nav.profile" },
 ] as const;
 
 export function AppShell() {
   const loc = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { t } = useT();
   const [unread, setUnread] = useState(0);
 
   useEffect(() => {
@@ -52,21 +54,21 @@ export function AppShell() {
       <button
         onClick={() => navigate({ to: "/add" })}
         aria-label="Tambah transaksi"
-        className="btn-press no-tap fixed bottom-24 left-1/2 z-30 -translate-x-1/2 grid h-14 w-14 place-items-center rounded-full text-primary-foreground shadow-xl"
-        style={{ background: "linear-gradient(135deg, var(--sage), var(--sage-deep))" }}
+        className="btn-press no-tap fixed bottom-24 left-1/2 z-30 -translate-x-1/2 grid h-14 w-14 place-items-center rounded-full text-primary-foreground shadow-xl ring-glow"
+        style={{ background: "var(--gradient-brand)" }}
       >
         <Plus className="h-7 w-7" />
       </button>
 
       <nav className="fixed inset-x-0 bottom-0 z-20 mx-auto w-full max-w-md p-3">
         <div className="glass mx-auto flex items-center justify-around rounded-3xl px-2 py-2 shadow-lg">
-          {tabs.map((t) => {
-            const active = loc.pathname.startsWith(t.to);
-            const Icon = t.icon;
+          {tabsBase.map((tab) => {
+            const active = loc.pathname.startsWith(tab.to);
+            const Icon = tab.icon;
             return (
               <Link
-                key={t.to}
-                to={t.to}
+                key={tab.to}
+                to={tab.to}
                 className="no-tap relative flex flex-1 flex-col items-center gap-1 rounded-2xl py-2 text-[11px] font-medium"
               >
                 <span
@@ -75,14 +77,14 @@ export function AppShell() {
                   }`}
                 >
                   <Icon className="h-5 w-5" />
-                  {t.to === "/notifications" && unread > 0 && (
+                  {tab.to === "/notifications" && unread > 0 && (
                     <span className="absolute right-3 top-1 grid h-4 min-w-4 place-items-center rounded-full bg-destructive px-1 text-[10px] text-destructive-foreground">
                       {unread > 9 ? "9+" : unread}
                     </span>
                   )}
                 </span>
                 <span className={active ? "text-foreground" : "text-muted-foreground"}>
-                  {t.label}
+                  {t(tab.key as Parameters<typeof t>[0])}
                 </span>
               </Link>
             );

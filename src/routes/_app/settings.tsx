@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { fmtIDR } from "@/lib/format";
-import { ArrowLeft, Moon, Sun, Loader2, Bell, BellRing } from "lucide-react";
+import { ArrowLeft, Moon, Sun, Loader2, Bell, BellRing, Languages } from "lucide-react";
 import { toast } from "sonner";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_app/settings")({ component: SettingsPage });
 
@@ -12,6 +13,7 @@ type Bud = { period: "daily" | "weekly" | "monthly"; amount: number };
 
 function SettingsPage() {
   const { user } = useAuth();
+  const { t, lang, setLang } = useT();
   const nav = useNavigate();
   const [budgets, setBudgets] = useState<Record<string, string>>({ daily: "", weekly: "", monthly: "" });
   const [busy, setBusy] = useState(false);
@@ -102,24 +104,45 @@ function SettingsPage() {
         <button onClick={() => nav({ to: "/profile" })} className="no-tap rounded-full p-2 hover:bg-accent">
           <ArrowLeft className="h-5 w-5" />
         </button>
-        <h1 className="font-display text-xl font-extrabold">Pengaturan</h1>
+        <h1 className="font-display text-xl font-extrabold">{t("settings.title")}</h1>
       </header>
 
       <div className="card-soft p-5">
-        <p className="text-sm font-semibold">Tampilan</p>
-        <p className="mt-1 text-xs text-muted-foreground">Pilih mode tema yang paling nyaman buat mata kamu.</p>
+        <p className="text-sm font-semibold">{t("settings.theme")}</p>
+        <p className="mt-1 text-xs text-muted-foreground">{t("settings.theme.desc")}</p>
         <div className="mt-3 grid grid-cols-2 gap-2 rounded-2xl bg-muted p-1">
           <button
             onClick={() => dark && toggleDark()}
             className={`btn-press flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${!dark ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"}`}
           >
-            <Sun className="h-4 w-4" /> Terang
+            <Sun className="h-4 w-4" /> {t("settings.theme.light")}
           </button>
           <button
             onClick={() => !dark && toggleDark()}
             className={`btn-press flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${dark ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"}`}
           >
-            <Moon className="h-4 w-4" /> Gelap
+            <Moon className="h-4 w-4" /> {t("settings.theme.dark")}
+          </button>
+        </div>
+      </div>
+
+      <div className="card-soft p-5">
+        <p className="text-sm font-semibold flex items-center gap-2">
+          <Languages className="h-4 w-4 text-primary" /> {t("settings.lang")}
+        </p>
+        <p className="mt-1 text-xs text-muted-foreground">{t("settings.lang.desc")}</p>
+        <div className="mt-3 grid grid-cols-2 gap-2 rounded-2xl bg-muted p-1">
+          <button
+            onClick={() => setLang("id")}
+            className={`btn-press flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${lang === "id" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"}`}
+          >
+            🇮🇩 Indonesia
+          </button>
+          <button
+            onClick={() => setLang("en")}
+            className={`btn-press flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${lang === "en" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"}`}
+          >
+            🇬🇧 English
           </button>
         </div>
       </div>
@@ -128,11 +151,9 @@ function SettingsPage() {
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-sm font-semibold flex items-center gap-2">
-              <BellRing className="h-4 w-4 text-primary" /> Notifikasi
+              <BellRing className="h-4 w-4 text-primary" /> {t("settings.notif")}
             </p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Tampilkan pengingat budget, tagihan & target tabungan di layar HP seperti aplikasi sungguhan.
-            </p>
+            <p className="mt-1 text-xs text-muted-foreground">{t("settings.notif.desc")}</p>
           </div>
           <span
             className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
@@ -143,16 +164,16 @@ function SettingsPage() {
                 : "bg-muted text-muted-foreground"
             }`}
           >
-            {notifPerm === "granted" ? "Aktif" : notifPerm === "denied" ? "Diblokir" : notifPerm === "unsupported" ? "N/A" : "Belum aktif"}
+            {notifPerm === "granted" ? t("settings.notif.on") : notifPerm === "denied" ? t("settings.notif.blocked") : notifPerm === "unsupported" ? "N/A" : t("settings.notif.off")}
           </span>
         </div>
         <button
           onClick={enableNotifications}
           disabled={notifPerm === "unsupported" || notifPerm === "denied"}
-          className="btn-press mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
+          className="btn-press mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-brand px-4 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
         >
           <Bell className="h-4 w-4" />
-          {notifPerm === "granted" ? "Kirim notifikasi percobaan" : "Aktifkan notifikasi"}
+          {notifPerm === "granted" ? t("settings.notif.test") : t("settings.notif.enable")}
         </button>
         {notifPerm === "denied" && (
           <p className="mt-2 text-[11px] text-muted-foreground">
@@ -163,13 +184,13 @@ function SettingsPage() {
 
       <div className="card-soft p-5 space-y-3">
         <div>
-          <p className="text-sm font-semibold">Limit budget</p>
-          <p className="text-xs text-muted-foreground">Atur batas pengeluaran kamu agar tetap on track ✨</p>
+          <p className="text-sm font-semibold">{t("settings.budget")}</p>
+          <p className="text-xs text-muted-foreground">{t("settings.budget.desc")}</p>
         </div>
         {(["daily", "weekly", "monthly"] as const).map((p) => (
           <label key={p} className="block">
             <span className="mb-1.5 block text-xs font-medium text-muted-foreground capitalize">
-              Limit {p === "daily" ? "harian" : p === "weekly" ? "mingguan" : "bulanan"}
+              {p === "daily" ? t("settings.budget.daily") : p === "weekly" ? t("settings.budget.weekly") : t("settings.budget.monthly")}
               {budgets[p] && Number(budgets[p]) > 0 && (
                 <span className="ml-2 text-foreground">{fmtIDR(Number(budgets[p]))}</span>
               )}
@@ -186,9 +207,9 @@ function SettingsPage() {
         <button
           onClick={save}
           disabled={busy}
-          className="btn-press flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
+          className="btn-press flex w-full items-center justify-center gap-2 rounded-2xl bg-brand py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
         >
-          {busy && <Loader2 className="h-4 w-4 animate-spin" />} Simpan limit
+          {busy && <Loader2 className="h-4 w-4 animate-spin" />} {t("settings.budget.save")}
         </button>
       </div>
 
