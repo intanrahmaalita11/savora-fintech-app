@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
 import { fmtIDR } from "@/lib/format";
-import { ArrowLeft, Moon, Sun, Loader2 } from "lucide-react";
+import { ArrowLeft, Moon, Sun, Loader2, Bell, BellRing } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/_app/settings")({ component: SettingsPage });
@@ -16,9 +16,15 @@ function SettingsPage() {
   const [budgets, setBudgets] = useState<Record<string, string>>({ daily: "", weekly: "", monthly: "" });
   const [busy, setBusy] = useState(false);
   const [dark, setDark] = useState(false);
+  const [notifPerm, setNotifPerm] = useState<NotificationPermission | "unsupported">("default");
 
   useEffect(() => {
     setDark(document.documentElement.classList.contains("dark"));
+    if (typeof window !== "undefined" && "Notification" in window) {
+      setNotifPerm(Notification.permission);
+    } else {
+      setNotifPerm("unsupported");
+    }
   }, []);
 
   useEffect(() => {
@@ -62,6 +68,34 @@ function SettingsPage() {
     } catch {}
   };
 
+  const enableNotifications = async () => {
+    if (notifPerm === "unsupported") {
+      toast.error("Browser kamu belum mendukung notifikasi");
+      return;
+    }
+    if (notifPerm === "granted") {
+      new Notification("Savora ✨", {
+        body: "Notifikasi aktif! Kami akan ingatkan budget & target tabungan kamu.",
+        icon: "/favicon.ico",
+        badge: "/favicon.ico",
+        tag: "savora-test",
+      });
+      return;
+    }
+    const res = await Notification.requestPermission();
+    setNotifPerm(res);
+    if (res === "granted") {
+      toast.success("Notifikasi diaktifkan 🔔");
+      new Notification("Savora ✨ siap menemanimu", {
+        body: "Kamu akan dapet pengingat budget, tagihan & target tabungan langsung di layar.",
+        icon: "/favicon.ico",
+        tag: "savora-welcome",
+      });
+    } else if (res === "denied") {
+      toast.error("Izin notifikasi ditolak. Aktifkan dari pengaturan browser.");
+    }
+  };
+
   return (
     <div className="space-y-5">
       <header className="flex items-center gap-2">
@@ -73,16 +107,58 @@ function SettingsPage() {
 
       <div className="card-soft p-5">
         <p className="text-sm font-semibold">Tampilan</p>
-        <button
-          onClick={toggleDark}
-          className="btn-press mt-3 flex w-full items-center justify-between rounded-2xl bg-accent px-4 py-3 text-sm font-medium text-accent-foreground"
-        >
-          <span className="flex items-center gap-2">
-            {dark ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />}
-            Mode {dark ? "gelap" : "terang"}
+        <p className="mt-1 text-xs text-muted-foreground">Pilih mode tema yang paling nyaman buat mata kamu.</p>
+        <div className="mt-3 grid grid-cols-2 gap-2 rounded-2xl bg-muted p-1">
+          <button
+            onClick={() => dark && toggleDark()}
+            className={`btn-press flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${!dark ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"}`}
+          >
+            <Sun className="h-4 w-4" /> Terang
+          </button>
+          <button
+            onClick={() => !dark && toggleDark()}
+            className={`btn-press flex items-center justify-center gap-2 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${dark ? "bg-card text-foreground shadow-sm" : "text-muted-foreground"}`}
+          >
+            <Moon className="h-4 w-4" /> Gelap
+          </button>
+        </div>
+      </div>
+
+      <div className="card-soft p-5">
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <p className="text-sm font-semibold flex items-center gap-2">
+              <BellRing className="h-4 w-4 text-primary" /> Notifikasi
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">
+              Tampilkan pengingat budget, tagihan & target tabungan di layar HP seperti aplikasi sungguhan.
+            </p>
+          </div>
+          <span
+            className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+              notifPerm === "granted"
+                ? "bg-primary/15 text-primary"
+                : notifPerm === "denied"
+                ? "bg-destructive/15 text-destructive"
+                : "bg-muted text-muted-foreground"
+            }`}
+          >
+            {notifPerm === "granted" ? "Aktif" : notifPerm === "denied" ? "Diblokir" : notifPerm === "unsupported" ? "N/A" : "Belum aktif"}
           </span>
-          <span className="rounded-full bg-primary/15 px-2 py-0.5 text-xs text-primary">Tap untuk ubah</span>
+        </div>
+        <button
+          onClick={enableNotifications}
+          disabled={notifPerm === "unsupported" || notifPerm === "denied"}
+          className="btn-press mt-3 flex w-full items-center justify-center gap-2 rounded-2xl bg-primary px-4 py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
+        >
+          <Bell className="h-4 w-4" />
+          {notifPerm === "granted" ? "Kirim notifikasi percobaan" : "Aktifkan notifikasi"}
         </button>
+        {notifPerm === "denied" && (
+          <p className="mt-2 text-[11px] text-muted-foreground">
+            Buka pengaturan situs di browser kamu lalu izinkan notifikasi untuk Savora.
+          </p>
+        )}
       </div>
 
       <div className="card-soft p-5 space-y-3">
