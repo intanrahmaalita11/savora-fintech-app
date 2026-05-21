@@ -2,13 +2,15 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/lib/auth";
-import { Camera, LogOut, Settings, Loader2 } from "lucide-react";
+import { Camera, LogOut, Settings, Loader2, Users, ChevronRight } from "lucide-react";
 import { toast } from "sonner";
+import { useT } from "@/lib/i18n";
 
 export const Route = createFileRoute("/_app/profile")({ component: ProfilePage });
 
 function ProfilePage() {
   const { user, profile, refreshProfile, signOut } = useAuth();
+  const { t } = useT();
   const nav = useNavigate();
   const [name, setName] = useState(profile?.display_name ?? "");
   const [busy, setBusy] = useState(false);
@@ -67,14 +69,14 @@ function ProfilePage() {
           ) : (
             <div
               className="grid h-24 w-24 place-items-center rounded-3xl text-3xl font-bold text-primary-foreground"
-              style={{ background: "linear-gradient(135deg, var(--sage), var(--sage-deep))" }}
+            style={{ background: "var(--gradient-brand)" }}
             >
               {(profile?.display_name ?? "U").slice(0, 1).toUpperCase()}
             </div>
           )}
           <button
             onClick={() => fileRef.current?.click()}
-            className="btn-press absolute -bottom-1 -right-1 grid h-9 w-9 place-items-center rounded-full bg-primary text-primary-foreground shadow-lg"
+            className="btn-press absolute -bottom-1 -right-1 grid h-9 w-9 place-items-center rounded-full bg-brand text-primary-foreground shadow-lg"
           >
             {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Camera className="h-4 w-4" />}
           </button>
@@ -95,11 +97,25 @@ function ProfilePage() {
         <button
           onClick={save}
           disabled={busy}
-          className="btn-press flex w-full items-center justify-center gap-2 rounded-2xl bg-primary py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
+          className="btn-press flex w-full items-center justify-center gap-2 rounded-2xl bg-brand py-3 text-sm font-semibold text-primary-foreground disabled:opacity-60"
         >
           {busy && <Loader2 className="h-4 w-4 animate-spin" />} Simpan profil
         </button>
       </div>
+
+      <Link
+        to="/friends"
+        className="card-soft flex items-center gap-3 p-4 no-tap"
+      >
+        <div className="grid h-11 w-11 place-items-center rounded-2xl bg-mint text-primary-foreground">
+          <Users className="h-5 w-5" />
+        </div>
+        <div className="flex-1">
+          <p className="text-sm font-semibold">{t("profile.friends")}</p>
+          <p className="text-[11px] text-muted-foreground">Atur teman & nabung bareng</p>
+        </div>
+        <ChevronRight className="h-5 w-5 text-muted-foreground" />
+      </Link>
 
       <button
         onClick={logout}
