@@ -23,6 +23,7 @@ import { Route as AppNotificationsRouteImport } from './routes/_app/notification
 import { Route as AppFriendsRouteImport } from './routes/_app/friends'
 import { Route as AppDashboardRouteImport } from './routes/_app/dashboard'
 import { Route as AppAddRouteImport } from './routes/_app/add'
+import { Route as AppGroupsIdRouteImport } from './routes/_app/groups.$id'
 
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
@@ -93,6 +94,11 @@ const AppAddRoute = AppAddRouteImport.update({
   path: '/add',
   getParentRoute: () => AppRoute,
 } as any)
+const AppGroupsIdRoute = AppGroupsIdRouteImport.update({
+  id: '/groups/$id',
+  path: '/groups/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -108,6 +114,7 @@ export interface FileRoutesByFullPath {
   '/savings': typeof AppSavingsRoute
   '/settings': typeof AppSettingsRoute
   '/transactions': typeof AppTransactionsRoute
+  '/groups/$id': typeof AppGroupsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -123,6 +130,7 @@ export interface FileRoutesByTo {
   '/savings': typeof AppSavingsRoute
   '/settings': typeof AppSettingsRoute
   '/transactions': typeof AppTransactionsRoute
+  '/groups/$id': typeof AppGroupsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -140,6 +148,7 @@ export interface FileRoutesById {
   '/_app/savings': typeof AppSavingsRoute
   '/_app/settings': typeof AppSettingsRoute
   '/_app/transactions': typeof AppTransactionsRoute
+  '/_app/groups/$id': typeof AppGroupsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -157,6 +166,7 @@ export interface FileRouteTypes {
     | '/savings'
     | '/settings'
     | '/transactions'
+    | '/groups/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -172,6 +182,7 @@ export interface FileRouteTypes {
     | '/savings'
     | '/settings'
     | '/transactions'
+    | '/groups/$id'
   id:
     | '__root__'
     | '/'
@@ -188,6 +199,7 @@ export interface FileRouteTypes {
     | '/_app/savings'
     | '/_app/settings'
     | '/_app/transactions'
+    | '/_app/groups/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -299,6 +311,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAddRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/groups/$id': {
+      id: '/_app/groups/$id'
+      path: '/groups/$id'
+      fullPath: '/groups/$id'
+      preLoaderRoute: typeof AppGroupsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -311,6 +330,7 @@ interface AppRouteChildren {
   AppSavingsRoute: typeof AppSavingsRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppTransactionsRoute: typeof AppTransactionsRoute
+  AppGroupsIdRoute: typeof AppGroupsIdRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -322,6 +342,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppSavingsRoute: AppSavingsRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppTransactionsRoute: AppTransactionsRoute,
+  AppGroupsIdRoute: AppGroupsIdRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
