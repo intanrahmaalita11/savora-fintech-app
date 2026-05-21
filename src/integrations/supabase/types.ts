@@ -41,6 +41,130 @@ export type Database = {
         }
         Relationships: []
       }
+      friendships: {
+        Row: {
+          addressee_id: string
+          created_at: string
+          id: string
+          requester_id: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          addressee_id: string
+          created_at?: string
+          id?: string
+          requester_id: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          addressee_id?: string
+          created_at?: string
+          id?: string
+          requester_id?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      group_contributions: {
+        Row: {
+          amount: number
+          created_at: string
+          group_id: string
+          id: string
+          note: string | null
+          user_id: string
+        }
+        Insert: {
+          amount: number
+          created_at?: string
+          group_id: string
+          id?: string
+          note?: string | null
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          group_id?: string
+          id?: string
+          note?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_contributions_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "group_savings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_members: {
+        Row: {
+          group_id: string
+          joined_at: string
+          user_id: string
+        }
+        Insert: {
+          group_id: string
+          joined_at?: string
+          user_id: string
+        }
+        Update: {
+          group_id?: string
+          joined_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "group_members_group_id_fkey"
+            columns: ["group_id"]
+            isOneToOne: false
+            referencedRelation: "group_savings"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      group_savings: {
+        Row: {
+          created_at: string
+          deadline: string | null
+          emoji: string | null
+          id: string
+          name: string
+          owner_id: string
+          saved_amount: number
+          target_amount: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          deadline?: string | null
+          emoji?: string | null
+          id?: string
+          name: string
+          owner_id: string
+          saved_amount?: number
+          target_amount: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          deadline?: string | null
+          emoji?: string | null
+          id?: string
+          name?: string
+          owner_id?: string
+          saved_amount?: number
+          target_amount?: number
+          updated_at?: string
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           body: string | null
@@ -210,7 +334,20 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      find_user_by_email: {
+        Args: { _email: string }
+        Returns: {
+          avatar_url: string
+          display_name: string
+          id: string
+        }[]
+      }
+      is_friend: { Args: { _a: string; _b: string }; Returns: boolean }
+      is_group_member: {
+        Args: { _gid: string; _uid: string }
+        Returns: boolean
+      }
+      shares_group: { Args: { _a: string; _b: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
