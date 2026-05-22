@@ -112,7 +112,7 @@ function ProfilePage() {
         </div>
         <div className="flex-1">
           <p className="text-sm font-semibold">{t("profile.friends")}</p>
-          <p className="text-[11px] text-muted-foreground">Atur teman & nabung bareng</p>
+          <p className="text-[11px] text-muted-foreground">Atur teman & nabung bersama</p>
         </div>
         <ChevronRight className="h-5 w-5 text-muted-foreground" />
       </Link>

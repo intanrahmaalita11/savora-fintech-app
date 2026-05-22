@@ -200,7 +200,7 @@ function SavingsPage() {
         <div className="card-soft flex flex-col items-center gap-3 p-8 text-center">
           <div className="grid h-16 w-16 place-items-center rounded-2xl bg-mint text-3xl text-primary-foreground"><Users className="h-7 w-7" /></div>
           <h3 className="text-base font-semibold">{t("savings.empty.group")}</h3>
-          <p className="text-sm text-muted-foreground">Ajak teman nabung bareng untuk liburan, kado, atau impian bersama</p>
+          <p className="text-sm text-muted-foreground">Ajak teman nabung bersama untuk liburan, kado, atau impian bersama</p>
           <button
             onClick={() => setShowNewGroup(true)}
             className="btn-press rounded-full bg-brand px-5 py-2.5 text-sm font-semibold text-primary-foreground"
@@ -434,7 +434,7 @@ function NewGroupSheet({ onClose }: { onClose: () => void }) {
     });
     setBusy(false);
     if (error) return toast.error(error.message);
-    toast.success("Tabungan bareng dibuat 🎉 Sekarang ajak temanmu!");
+    toast.success("Tabungan bersama dibuat 🎉 Sekarang ajak temanmu!");
     onClose();
     if (data) window.location.assign(`/groups/${data as string}`);
   };
@@ -442,7 +442,7 @@ function NewGroupSheet({ onClose }: { onClose: () => void }) {
   return (
     <Sheet onClose={onClose}>
       <div className="mb-4 flex items-center justify-between">
-        <h3 className="font-display text-lg font-bold">Tabungan bareng baru</h3>
+        <h3 className="font-display text-lg font-bold">Tabungan bersama baru</h3>
         <button onClick={onClose} className="rounded-full p-2 hover:bg-accent"><X className="h-5 w-5" /></button>
       </div>
       <div className="space-y-3">
@@ -462,7 +462,7 @@ function NewGroupSheet({ onClose }: { onClose: () => void }) {
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Misalnya: Liburan ke Bali bareng"
+          placeholder="Misalnya: Liburan ke Bali bersama"
           className="w-full rounded-2xl border border-input bg-card px-4 py-3 text-sm outline-none focus:border-ring"
         />
         <input
@@ -485,7 +485,7 @@ function NewGroupSheet({ onClose }: { onClose: () => void }) {
         disabled={busy}
         className="btn-press mt-5 flex w-full items-center justify-center gap-2 rounded-2xl bg-brand py-4 font-semibold text-primary-foreground disabled:opacity-60"
       >
-        {busy && <Loader2 className="h-4 w-4 animate-spin" />} Buat tabungan bareng
+        {busy && <Loader2 className="h-4 w-4 animate-spin" />} Buat tabungan bersama
       </button>
     </Sheet>
   );
