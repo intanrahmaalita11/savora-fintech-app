@@ -117,7 +117,7 @@ function FriendsPage() {
       await supabase.from("notifications").insert({
         user_id: f.requester_id,
         title: "Permintaan diterima 🎉",
-        body: "Sekarang kalian bisa nabung bareng di Savora",
+        body: "Sekarang kalian bisa nabung bersama di Savora",
         kind: "success",
       });
     }

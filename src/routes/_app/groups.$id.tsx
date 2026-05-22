@@ -89,7 +89,7 @@ function GroupPage() {
   for (const c of contribs) memberTotals.set(c.user_id, (memberTotals.get(c.user_id) ?? 0) + Number(c.amount));
 
   const removeGroup = async () => {
-    if (!confirm("Hapus tabungan bareng ini?")) return;
+    if (!confirm("Hapus tabungan bersama ini?")) return;
     await supabase.from("group_savings").delete().eq("id", group.id);
     nav({ to: "/savings" });
   };
@@ -124,7 +124,7 @@ function GroupPage() {
               {group.emoji ?? "🏝️"}
             </span>
             <div>
-              <p className="text-xs opacity-90">Target bareng</p>
+              <p className="text-xs opacity-90">Target bersama</p>
               <p className="font-numeric text-2xl font-extrabold">{fmtIDR(Number(group.target_amount))}</p>
             </div>
           </div>
@@ -300,7 +300,7 @@ function InviteSheet({ group, existing, onClose }: { group: Group; existing: Set
     if (!error) {
       await supabase.from("notifications").insert({
         user_id: fid,
-        title: `Diajak nabung bareng 🎯`,
+        title: `Diajak nabung bersama 🎯`,
         body: `Kamu diajak ikut tabungan "${group.name}"`,
         kind: "info",
       });
