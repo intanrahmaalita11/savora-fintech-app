@@ -429,7 +429,7 @@ function NewGroupSheet({ onClose }: { onClose: () => void }) {
     const { data, error } = await supabase.rpc("create_group_saving", {
       _name: name.trim(),
       _target: num,
-      _deadline: deadline || null,
+      _deadline: (deadline || null) as unknown as string,
       _emoji: emoji,
     });
     setBusy(false);
