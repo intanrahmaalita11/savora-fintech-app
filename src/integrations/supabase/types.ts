@@ -107,16 +107,19 @@ export type Database = {
         Row: {
           group_id: string
           joined_at: string
+          role: string
           user_id: string
         }
         Insert: {
           group_id: string
           joined_at?: string
+          role?: string
           user_id: string
         }
         Update: {
           group_id?: string
           joined_at?: string
+          role?: string
           user_id?: string
         }
         Relationships: [
@@ -334,6 +337,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      create_group_saving: {
+        Args: {
+          _deadline: string
+          _emoji: string
+          _name: string
+          _target: number
+        }
+        Returns: string
+      }
       find_user_by_email: {
         Args: { _email: string }
         Returns: {

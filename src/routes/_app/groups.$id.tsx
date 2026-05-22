@@ -146,7 +146,7 @@ function GroupPage() {
 
       <div className="card-soft p-5">
         <div className="flex items-center justify-between">
-          <p className="text-sm font-semibold">Anggota ({members.length + 1})</p>
+          <p className="text-sm font-semibold">Anggota ({Math.max(members.length, 1)})</p>
           {isOwner && (
             <button
               onClick={() => setShowInvite(true)}

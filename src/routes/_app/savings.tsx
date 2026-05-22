@@ -426,22 +426,17 @@ function NewGroupSheet({ onClose }: { onClose: () => void }) {
     const num = Number(target.replace(/[^\d]/g, ""));
     if (!num || num <= 0) return toast.error("Nominal target tidak valid");
     setBusy(true);
-    const { data, error } = await supabase
-      .from("group_savings")
-      .insert({
-        owner_id: user.id,
-        name: name.trim(),
-        target_amount: num,
-        deadline: deadline || null,
-        emoji,
-      })
-      .select("id")
-      .single();
+    const { data, error } = await supabase.rpc("create_group_saving", {
+      _name: name.trim(),
+      _target: num,
+      _deadline: (deadline || null) as unknown as string,
+      _emoji: emoji,
+    });
     setBusy(false);
     if (error) return toast.error(error.message);
     toast.success("Tabungan bareng dibuat 🎉 Sekarang ajak temanmu!");
     onClose();
-    if (data?.id) window.location.assign(`/groups/${data.id}`);
+    if (data) window.location.assign(`/groups/${data as string}`);
   };
 
   return (
